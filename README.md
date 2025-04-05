@@ -12,11 +12,12 @@
 -   [ ] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
 -   [ ] Feature: Supabase integration for RAG based FAQs and answering of common questions on discord.
 -   [x] Documentation: Write documentation demo, including installation guide using MkDocs and host it on github pages.
-        Documentation for the demo has been written in [docs](./docs/) folder, which can be served as a MkDocs documentation on GitHub pages via the [docs](./.github/workflows/docs.yml) GitHub action.
-        Screenshots:
+    -   Documentation for the demo has been written in [docs](./docs/) folder, which can be served as a MkDocs documentation on GitHub pages via the [docs](./.github/workflows/docs.yml) GitHub action.
+    -   Screenshots:
         ![screenshot 1](./docs/assets/images/screenshot1.png)
         ![screenshot 2](./docs/assets/images/screenshot2.png)
-        ...
+
+...
 
 ---
 
