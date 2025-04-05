@@ -1,0 +1,17 @@
+{
+  "action": "opened",
+  "pull_request": {
+    "number": 2,
+    "title": "Sample PR Title",
+    "body": "This is a sample PR body for testing",
+    "html_url": "https://github.com/sample/repo/pull/2"
+  },
+  "repository": {
+    "full_name": "sample/repo",
+    "html_url": "https://github.com/sample/repo"
+  },
+  "sender": {
+    "id": 12345,
+    "login": "sample-user"
+  }
+}

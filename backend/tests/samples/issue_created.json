@@ -1,0 +1,17 @@
+{
+  "action": "opened",
+  "issue": {
+    "number": 1,
+    "title": "Sample Issue Title",
+    "body": "This is a sample issue body for testing",
+    "html_url": "https://github.com/sample/repo/issues/1"
+  },
+  "repository": {
+    "full_name": "sample/repo",
+    "html_url": "https://github.com/sample/repo"
+  },
+  "sender": {
+    "id": 12345,
+    "login": "sample-user"
+  }
+}

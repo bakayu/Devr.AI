@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import List, Dict, Any, Optional
 from uuid import UUID
 from pydantic import BaseModel, Field
@@ -208,5 +209,3 @@ class EmbeddingService:
 
 class VectorDBService:
     """Service for interacting with Supabase Vector DB"""
-    
-

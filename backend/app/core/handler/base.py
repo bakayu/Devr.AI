@@ -9,27 +9,27 @@ logger = logging.getLogger(__name__)
 
 class BaseHandler(ABC):
     """Base class for all event handlers"""
-    
+
     def __init__(self):
         self.name = self.__class__.__name__
-    
+
     async def pre_handle(self, event: BaseEvent) -> BaseEvent:
-        """Pre-processing for an event before handling"""
+        """Prepare and validate an event before main processing"""
         logger.debug(f"Pre-handling event {event.id} with {self.name}")
         return event
-    
+
     @abstractmethod
     async def handle(self, event: BaseEvent) -> Dict[str, Any]:
-        """Handle the event"""
+        """Core processing logic for an event"""
         pass
-    
+
     async def post_handle(self, event: BaseEvent, result: Dict[str, Any]) -> Dict[str, Any]:
-        """Post-processing after handling an event"""
+        """Clean up and finalize processing after event handling"""
         logger.debug(f"Post-handling event {event.id} with {self.name}")
         return result
-    
+
     async def process(self, event: BaseEvent) -> Dict[str, Any]:
-        """Process the event through the complete pipeline"""
+        """Execute the complete event handling pipeline"""
         try:
             processed_event = await self.pre_handle(event)
             result = await self.handle(processed_event)

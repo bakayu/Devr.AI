@@ -1,43 +1,63 @@
 import logging
-from typing import Dict, Any
-from ..events.base import BaseEvent, EventType
+from typing import Dict, Any, List
+from ..events.base import BaseEvent
+from ..events.enums import EventType
 from .base import BaseHandler
+from ...services.github_service import GitHubService
 
 logger = logging.getLogger(__name__)
 
 class PRHandler(BaseHandler):
     """Handler for GitHub PR events"""
-    
+
+    def __init__(self):
+        super().__init__()
+        self.github_service = GitHubService()
+
     async def handle(self, event: BaseEvent) -> Dict[str, Any]:
         logger.info(f"Handling GitHub PR event: {event.event_type}")
-        
+
         if event.event_type == EventType.PR_CREATED:
             return await self._handle_pr_created(event)
-        elif event.event_type == EventType.PR_UPDATED:
-            return await self._handle_pr_updated(event)
-        elif event.event_type == EventType.PR_COMMENTED:
-            return await self._handle_pr_commented(event)
-        elif event.event_type == EventType.PR_REVIEWED:
-            return await self._handle_pr_reviewed(event)
         else:
             logger.warning(f"Unsupported PR event type: {event.event_type}")
             return {"success": False, "reason": "Unsupported event type"}
-    
+
     async def _handle_pr_created(self, event: BaseEvent) -> Dict[str, Any]:
-        # Implementation for new PR creation
-        # - Validate PR template
-        # - Check CI status
-        # - Suggest reviewers
-        return {"success": True, "action": "pr_processed"}
-    
-    async def _handle_pr_updated(self, event: BaseEvent) -> Dict[str, Any]:
-        # Implementation for PR updates
-        return {"success": True, "action": "pr_updated"}
-    
-    async def _handle_pr_commented(self, event: BaseEvent) -> Dict[str, Any]:
-        # Implementation for comments on PRs
-        return {"success": True, "action": "comment_processed"}
-    
-    async def _handle_pr_reviewed(self, event: BaseEvent) -> Dict[str, Any]:
-        # Implementation for PR reviews
-        return {"success": True, "action": "review_processed"}
+        """Process new pull request and add welcome comment"""
+        try:
+            repository = event.repository
+            pr_number = event.pr_number
+            pr_title = event.title
+            pr_url = event.url
+
+            logger.info(f"New PR created: {repository}#{pr_number} - {pr_title}")
+
+            comment = (
+                f"Thank you @{event.actor_name} for submitting this pull request!\n"
+                f"The team has been notified and will review it soon."
+            )
+
+            comment_added = await self.github_service.add_pr_comment(
+                repository, pr_number, comment
+            )
+
+            if comment_added:
+                logger.info(f"Added thank you comment to PR {repository}#{pr_number}")
+            else:
+                logger.warning(f"Failed to add comment to PR {repository}#{pr_number}")
+
+            return {
+                "success": True,
+                "action": "pr_processed",
+                "comment_added": comment_added,
+                "pr": {
+                    "repository": repository,
+                    "number": pr_number,
+                    "title": pr_title,
+                    "url": pr_url
+                }
+            }
+        except Exception as e:
+            logger.error(f"Error handling PR created event: {str(e)}")
+            return {"success": False, "error": str(e)}
