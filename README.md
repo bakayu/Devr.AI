@@ -1,15 +1,36 @@
 # Devr.AI - AI-Powered Developer Relations Assistant
 
+# This is a demo branch
+
+> [!NOTE]
+> This branch will be used to develop and showcase a demo featuring some of the features from my proposal - [link](https://docs.google.com/document/d/1HINE3WiX_SRkeAu_ByR3wB3t3E2yLq3rUEAHkmNZX9M/edit?usp=sharing).
+
+### TO-DO:
+
+-   [ ] Implement a Basic Event Bus with asyncio and define event handlers for demo features.
+-   [ ] Implement GitHub Event capture and event handlers for routing.
+-   [ ] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
+-   [ ] Feature: Supabase integration for RAG based FAQs and answering of common questions on discord.
+-   [x] Documentation: Write documentation demo, including installation guide using MkDocs and host it on github pages.
+        Documentation for the demo has been written in [docs](./docs/) folder, which can be served as a MkDocs documentation on GitHub pages via the [docs](./.github/workflows/docs.yml) GitHub action.
+        Screenshots:
+        ![screenshot 1](./docs/assets/images/screenshot1.png)
+        ![screenshot 2](./docs/assets/images/screenshot2.png)
+        ...
+
+---
+
 ## Table of Contents
-- [Project Overview](#project-overview)
-- [System Architecture](#system-architecture)
-- [Setup Guide](#setup-guide)
-- [Core Features](#core-features)
-- [Technology Stack](#technology-stack)
-- [Integration Details](#integration-details)
-- [Workflows](#workflows)
-- [Data Flow and Storage](#data-flow-and-storage)
-- [Deployment Strategy](#deployment-strategy)
+
+-   [Project Overview](#project-overview)
+-   [System Architecture](#system-architecture)
+-   [Setup Guide](#setup-guide)
+-   [Core Features](#core-features)
+-   [Technology Stack](#technology-stack)
+-   [Integration Details](#integration-details)
+-   [Workflows](#workflows)
+-   [Data Flow and Storage](#data-flow-and-storage)
+-   [Deployment Strategy](#deployment-strategy)
 
 ## Project Overview
 
@@ -19,11 +40,11 @@ The system leverages Large Language Models (LLMs), knowledge retrieval mechanism
 
 ### Key Value Propositions
 
-- **Reduce maintainer workload** by automating routine interactions and queries
-- **Improve contributor experience** through personalized onboarding and support
-- **Enhance project visibility** via consistent engagement and community nurturing
-- **Generate actionable insights** from community interactions and contribution patterns
-- **Ensure knowledge preservation** by capturing and organizing project information
+-   **Reduce maintainer workload** by automating routine interactions and queries
+-   **Improve contributor experience** through personalized onboarding and support
+-   **Enhance project visibility** via consistent engagement and community nurturing
+-   **Generate actionable insights** from community interactions and contribution patterns
+-   **Ensure knowledge preservation** by capturing and organizing project information
 
 ## System Architecture
 
@@ -118,7 +139,7 @@ flowchart TB
     METRICS --> TREND
     REPORT --> Supa
     TREND --> Supa
-    
+
 
     %% Styling for Light Colors with Black Text
     classDef external fill:#e0f7fa,stroke:#00796b,stroke-width:1px,color:#000;
@@ -147,140 +168,153 @@ flowchart TB
 Devr.AI follows a microservices architecture with the following key components:
 
 1. **API Gateway Layer**
-   - Handles all incoming requests from integrated platforms
-   - Manages authentication and request routing
-   - Implements rate limiting and request validation
+
+    - Handles all incoming requests from integrated platforms
+    - Manages authentication and request routing
+    - Implements rate limiting and request validation
 
 2. **Core Processing Engine**
-   - Orchestrates workflows between different services
-   - Manages the processing queue for asynchronous tasks
-   - Handles context management for ongoing conversations
+
+    - Orchestrates workflows between different services
+    - Manages the processing queue for asynchronous tasks
+    - Handles context management for ongoing conversations
 
 3. **AI Service Layer**
-   - LLM integration for natural language understanding and generation
-   - Knowledge retrieval system for accessing project-specific information
-   - Specialized models for code understanding and issue triage
+
+    - LLM integration for natural language understanding and generation
+    - Knowledge retrieval system for accessing project-specific information
+    - Specialized models for code understanding and issue triage
 
 4. **Integration Services**
-   - Platform-specific adapters for Discord, Slack, GitHub, and Discourse
-   - Webhook handlers and event processors
-   - Authentication managers for each platform
+
+    - Platform-specific adapters for Discord, Slack, GitHub, and Discourse
+    - Webhook handlers and event processors
+    - Authentication managers for each platform
 
 5. **Data Storage Layer**
-   - Vector database for semantic search functionality
-   - Relational database for structured data and relationships
-   - Document store for conversation history and analytics
+
+    - Vector database for semantic search functionality
+    - Relational database for structured data and relationships
+    - Document store for conversation history and analytics
 
 6. **Analytics Engine**
-   - Real-time metrics calculation
-   - Report generation
-   - Anomaly detection and trend analysis
+    - Real-time metrics calculation
+    - Report generation
+    - Anomaly detection and trend analysis
 
 ## Core Features
 
 ### 1. AI-Driven Contributor Engagement
 
-- **New Contributor Welcome & Onboarding**
-  - Automatic detection of first-time contributors
-  - Personalized welcome messages with project-specific onboarding instructions
-  - Interactive guidance through first contribution steps
+-   **New Contributor Welcome & Onboarding**
 
-- **Community Interaction**
-  - Natural language conversations across all integrated platforms
-  - Contextual responses based on user history and project knowledge
-  - Multi-turn dialogue management with memory of previous interactions
+    -   Automatic detection of first-time contributors
+    -   Personalized welcome messages with project-specific onboarding instructions
+    -   Interactive guidance through first contribution steps
 
-- **Activity Promotion**
-  - Automated suggestions for good first issues to new contributors
-  - Regular updates about project milestones and achievements
-  - Recognition of contributor achievements and milestones
+-   **Community Interaction**
+
+    -   Natural language conversations across all integrated platforms
+    -   Contextual responses based on user history and project knowledge
+    -   Multi-turn dialogue management with memory of previous interactions
+
+-   **Activity Promotion**
+    -   Automated suggestions for good first issues to new contributors
+    -   Regular updates about project milestones and achievements
+    -   Recognition of contributor achievements and milestones
 
 ### 2. Automated Issue Triage & PR Assistance
 
-- **Issue Classification**
-  - Automatic categorization of new issues by type, component, and priority
-  - Identification of duplicate issues and linking them together
-  - Suggested assignment based on contributor expertise and availability
+-   **Issue Classification**
 
-- **PR Review Support**
-  - Automated initial code review comments for common issues
-  - Documentation verification and suggestions
-  - Test coverage analysis and feedback
+    -   Automatic categorization of new issues by type, component, and priority
+    -   Identification of duplicate issues and linking them together
+    -   Suggested assignment based on contributor expertise and availability
 
-- **Contributor Guidance**
-  - Step-by-step assistance for setting up development environments
-  - Code style and convention explanations
-  - Troubleshooting help for common development issues
+-   **PR Review Support**
+
+    -   Automated initial code review comments for common issues
+    -   Documentation verification and suggestions
+    -   Test coverage analysis and feedback
+
+-   **Contributor Guidance**
+    -   Step-by-step assistance for setting up development environments
+    -   Code style and convention explanations
+    -   Troubleshooting help for common development issues
 
 ### 3. Knowledge Base & FAQ Automation
 
-- **Dynamic Documentation**
-  - Automatic extraction of FAQs from community conversations
-  - Creation and maintenance of project wikis and guides
-  - Code documentation generation and enhancement
+-   **Dynamic Documentation**
 
-- **Contextual Help**
-  - Instant answers to common technical questions
-  - Project-specific knowledge retrieval
-  - Code snippet explanations and examples
+    -   Automatic extraction of FAQs from community conversations
+    -   Creation and maintenance of project wikis and guides
+    -   Code documentation generation and enhancement
 
-- **Knowledge Preservation**
-  - Capturing of tribal knowledge from experienced contributors
-  - Archiving of important decisions and their context
-  - Historical project evolution tracking
+-   **Contextual Help**
+
+    -   Instant answers to common technical questions
+    -   Project-specific knowledge retrieval
+    -   Code snippet explanations and examples
+
+-   **Knowledge Preservation**
+    -   Capturing of tribal knowledge from experienced contributors
+    -   Archiving of important decisions and their context
+    -   Historical project evolution tracking
 
 ### 4. AI-Powered Community Analytics
 
-- **Engagement Metrics**
-  - Contributor activity tracking across platforms
-  - Response time and resolution rate monitoring
-  - Community growth and retention analytics
+-   **Engagement Metrics**
 
-- **Contribution Analysis**
-  - Identification of valuable contributors and their patterns
-  - Code quality and impact measurements
-  - Diversity and inclusion metrics
+    -   Contributor activity tracking across platforms
+    -   Response time and resolution rate monitoring
+    -   Community growth and retention analytics
 
-- **Health Monitoring**
-  - Early warning system for declining project activity
-  - Burnout risk detection for maintainers
-  - Community sentiment analysis
+-   **Contribution Analysis**
+
+    -   Identification of valuable contributors and their patterns
+    -   Code quality and impact measurements
+    -   Diversity and inclusion metrics
+
+-   **Health Monitoring**
+    -   Early warning system for declining project activity
+    -   Burnout risk detection for maintainers
+    -   Community sentiment analysis
 
 ## Setup Guide
+
 For installing the project locally refer to the [Installation Guide](./docs/INSTALL_GUIDE.md)
 
 ## Technology Stack
 
 ### Backend Services
 
-- **Core Framework**: FastAPI
-- **Containerization**: Docker & Kubernetes
-- **Messaging Queue**: RabbitMQ
-- **Task Scheduling**: Celery
+-   **Core Framework**: FastAPI
+-   **Containerization**: Docker & Kubernetes
+-   **Messaging Queue**: RabbitMQ
+-   **Task Scheduling**: Celery
 
 ### AI Components (Groq APIs)
 
-- **LLM Integration**: Strong LLM with reasoning capacity
-- **Embeddings**: Embedding Model
-
+-   **LLM Integration**: Strong LLM with reasoning capacity
+-   **Embeddings**: Embedding Model
 
 ### Data Storage
 
-- **Vector Database**: Supabase
-- **Relational Database**: Supabase (PostgreSQL)
-- **Document Storage**: Supabase
+-   **Vector Database**: Supabase
+-   **Relational Database**: Supabase (PostgreSQL)
+-   **Document Storage**: Supabase
 
 ### Frontend Components
 
-- **Dashboard**: React.js + Tailwind CSS
-- **Analytics UI**: React.js + Shadcn
+-   **Dashboard**: React.js + Tailwind CSS
+-   **Analytics UI**: React.js + Shadcn
 
 ### DevOps & Infrastructure
 
-- **CI/CD**: GitHub Actions
-- **Monitoring**: Prometheus
-- **Logging**: ELK Stack
-- **Cloud Provider**: AWS / GCP
+-   **CI/CD**: GitHub Actions
+-   **Monitoring**: Prometheus
+-   **Logging**: ELK Stack
+-   **Cloud Provider**: AWS / GCP
 
 ## Integration Details
 
@@ -299,16 +333,16 @@ sequenceDiagram
     User->>Bot: Sends message or command
     Bot->>API: Forwards event via webhook
     API->>EP: Routes to Event Processor
-    
+
     EP->>DB: Check user context
     DB->>EP: Return context
-    
+
     EP->>KB: Retrieve relevant knowledge
     KB->>EP: Return knowledge
-    
+
     EP->>AI: Generate response with context
     AI->>EP: Return formatted response
-    
+
     EP->>DB: Update conversation history
     EP->>Bot: Send response to Discord
     Bot->>User: Display response message
@@ -317,22 +351,26 @@ sequenceDiagram
 ```
 
 #### Authentication & Setup
-- OAuth2 flow for bot installation
-- Server-specific configuration and permission setup
-- Role-based access control configuration
+
+-   OAuth2 flow for bot installation
+-   Server-specific configuration and permission setup
+-   Role-based access control configuration
 
 #### Event Handling
-- Message creation and update events
-- Channel join/leave events
-- Reaction events for issue tracking
+
+-   Message creation and update events
+-   Channel join/leave events
+-   Reaction events for issue tracking
 
 #### Features
-- Thread creation for complex discussions
-- Slash commands for direct interaction with DevrAI
-- Automated welcome messages in designated channels
-- Role assignment based on GitHub contribution history
+
+-   Thread creation for complex discussions
+-   Slash commands for direct interaction with DevrAI
+-   Automated welcome messages in designated channels
+-   Role assignment based on GitHub contribution history
 
 #### Data Flow
+
 1. Discord webhook sends event to API Gateway
 2. Event processor extracts relevant information
 3. AI Service generates appropriate response
@@ -352,16 +390,16 @@ sequenceDiagram
     User->>Slack: Sends message/command
     Slack->>API: Forwards via Events API
     API->>EP: Process Slack event
-    
+
     EP->>KB: Query relevant information
     KB->>EP: Return knowledge snippets
-    
+
     EP->>AI: Generate response
     AI->>EP: Return formatted response
-    
+
     EP->>Slack: Send Block Kit message
     Slack->>User: Display interactive response
-    
+
     alt User Interaction
         User->>Slack: Clicks interactive element
         Slack->>API: Action payload
@@ -372,22 +410,26 @@ sequenceDiagram
 ```
 
 #### Authentication & Setup
-- Slack App Directory installation flow
-- Workspace-specific settings configuration
-- Channel mapping to project components
+
+-   Slack App Directory installation flow
+-   Workspace-specific settings configuration
+-   Channel mapping to project components
 
 #### Event Handling
-- Message events in channels and direct messages
-- App mention events
-- Interactive component events (buttons, dropdowns)
+
+-   Message events in channels and direct messages
+-   App mention events
+-   Interactive component events (buttons, dropdowns)
 
 #### Features
-- Slash commands for project information
-- Interactive message components for issue triage
-- Automatic daily/weekly project updates
-- Direct message onboarding for new contributors
+
+-   Slash commands for project information
+-   Interactive message components for issue triage
+-   Automatic daily/weekly project updates
+-   Direct message onboarding for new contributors
 
 #### Data Flow
+
 1. Slack Events API sends event to API Gateway
 2. Event processor validates and processes the event
 3. Workflow engine determines appropriate action
@@ -407,7 +449,7 @@ sequenceDiagram
 
     GH->>API: Webhook (Issue/PR/Comment)
     API->>EP: Process GitHub event
-    
+
     alt New Issue
         EP->>AT: Triage new issue
         AT->>AI: Analyze issue content
@@ -429,23 +471,27 @@ sequenceDiagram
 ```
 
 #### Authentication & Setup
-- GitHub App installation process
-- Repository-specific configuration
-- Permission scopes management
+
+-   GitHub App installation process
+-   Repository-specific configuration
+-   Permission scopes management
 
 #### Event Handling
-- Issue creation, update, and comment events
-- Pull request lifecycle events
-- Repository star and fork events
-- Release publication events
+
+-   Issue creation, update, and comment events
+-   Pull request lifecycle events
+-   Repository star and fork events
+-   Release publication events
 
 #### Features
-- Automated issue labeling and assignment
-- PR review comments and suggestions
-- Release notes generation
-- Contributor statistics and recognition
+
+-   Automated issue labeling and assignment
+-   PR review comments and suggestions
+-   Release notes generation
+-   Contributor statistics and recognition
 
 #### Data Flow
+
 1. GitHub webhook sends event to API Gateway
 2. Event processor categorizes and enriches event data
 3. Task is assigned to appropriate service based on event type
@@ -455,22 +501,26 @@ sequenceDiagram
 ### Discourse Integration
 
 #### Authentication & Setup
-- API key authentication
-- Category and tag mapping
-- User role configuration
+
+-   API key authentication
+-   Category and tag mapping
+-   User role configuration
 
 #### Event Handling
-- New topic creation events
-- Post creation and update events
-- User registration events
+
+-   New topic creation events
+-   Post creation and update events
+-   User registration events
 
 #### Features
-- Automatic responses to common questions
-- Cross-linking between forum topics and GitHub issues
-- Knowledge base article suggestions
-- Community showcase of project achievements
+
+-   Automatic responses to common questions
+-   Cross-linking between forum topics and GitHub issues
+-   Knowledge base article suggestions
+-   Community showcase of project achievements
 
 #### Data Flow
+
 1. Discourse webhook or API polling detects new content
 2. Content is processed and classified
 3. Knowledge retrieval finds relevant information
@@ -484,30 +534,30 @@ sequenceDiagram
 ```mermaid
 stateDiagram-v2
     [*] --> DetectNewContributor
-    
+
     DetectNewContributor --> GenerateWelcome
     GenerateWelcome --> DetermineIntention
-    
+
     DetermineIntention --> IssueGuidance: Issue Creation
     DetermineIntention --> PRGuidance: PR Submission
     DetermineIntention --> GeneralGuidance: Platform Join
-    
+
     IssueGuidance --> ProvideResources
     PRGuidance --> ProvideResources
     GeneralGuidance --> ProvideResources
-    
+
     ProvideResources --> MonitorEngagement
-    
+
     MonitorEngagement --> FollowUp: No Activity
     MonitorEngagement --> AnswerQuestions: User Response
     MonitorEngagement --> CompleteOnboarding: Task Completed
-    
+
     FollowUp --> MonitorEngagement
     AnswerQuestions --> MonitorEngagement
-    
+
     CompleteOnboarding --> RecordStats
     RecordStats --> [*]
-    
+
     AnswerQuestions --> EscalateToMaintainer: Complex Question
     EscalateToMaintainer --> [*]
 ```
@@ -515,27 +565,27 @@ stateDiagram-v2
 1. **Trigger**: First-time contributor opens an issue or PR, or joins community platform
 2. **Detection**: System identifies user as new contributor based on platform history
 3. **Personalization**: AI generates personalized welcome message based on:
-   - Contribution type (issue, PR, question)
-   - Project area of interest
-   - Technical background (if available)
+    - Contribution type (issue, PR, question)
+    - Project area of interest
+    - Technical background (if available)
 4. **Guidance**: Provides specific next steps based on contribution intent:
-   - Development environment setup instructions
-   - Coding standards and guidelines
-   - Testing requirements
-   - Documentation expectations
+    - Development environment setup instructions
+    - Coding standards and guidelines
+    - Testing requirements
+    - Documentation expectations
 5. **Follow-up**: Monitors engagement and provides additional assistance:
-   - Answers to follow-up questions
-   - Escalation to human maintainers when necessary
-   - Check-ins on progress after predefined intervals
+    - Answers to follow-up questions
+    - Escalation to human maintainers when necessary
+    - Check-ins on progress after predefined intervals
 
 ### Issue Triage Workflow
 
 ```mermaid
 stateDiagram-v2
     [*] --> NewIssueDetected
-    
+
     NewIssueDetected --> AnalyzeContent
-    
+
     AnalyzeContent --> CheckDuplicates
     CheckDuplicates --> IdentifyDuplicate: Match Found
     CheckDuplicates --> ClassifyIssue: No Duplicate
@@ -544,115 +594,115 @@ stateDiagram-v2
     LinkIssues --> NotifyUser
     NotifyUser --> CloseAsDuplicate
     CloseAsDuplicate --> [*]
-    
+
     ClassifyIssue --> AssignLabels
     AssignLabels --> DetermineComplexity
-    
+
     DetermineComplexity --> SuggestAssignees
     SuggestAssignees --> CheckCompleteness
-    
+
     CheckCompleteness --> RequestInfo: Incomplete
     CheckCompleteness --> UpdateProject: Complete
-    
+
     RequestInfo --> AwaitResponse
     AwaitResponse --> AnalyzeContent: Info Provided
     AwaitResponse --> CloseStale: No Response
-    
+
     UpdateProject --> NotifyTeam
     NotifyTeam --> ScheduleFollowUp
     ScheduleFollowUp --> [*]
-    
+
     CloseStale --> [*]
 ```
 
 1. **Trigger**: New issue created on GitHub
 2. **Analysis**:
-   - AI extracts key information from issue description
-   - Compares with existing issues for duplicates
-   - Identifies affected components and potential severity
+    - AI extracts key information from issue description
+    - Compares with existing issues for duplicates
+    - Identifies affected components and potential severity
 3. **Classification**:
-   - Applies appropriate labels (bug, feature, documentation, etc.)
-   - Assigns priority level
-   - Suggests potential assignees based on expertise
+    - Applies appropriate labels (bug, feature, documentation, etc.)
+    - Assigns priority level
+    - Suggests potential assignees based on expertise
 4. **Enhancement**:
-   - Requests additional information if description is incomplete
-   - Suggests reproducible test cases if applicable
-   - Provides links to relevant documentation
+    - Requests additional information if description is incomplete
+    - Suggests reproducible test cases if applicable
+    - Provides links to relevant documentation
 5. **Notification**:
-   - Alerts appropriate team members in Slack/Discord
-   - Updates project boards
-   - Schedules follow-up if issue remains unaddressed
+    - Alerts appropriate team members in Slack/Discord
+    - Updates project boards
+    - Schedules follow-up if issue remains unaddressed
 
 ### Knowledge Query Workflow
 
 ```mermaid
 stateDiagram-v2
     [*] --> QuestionDetected
-    
+
     QuestionDetected --> ClassifyIntent
     ClassifyIntent --> ExtractEntities
-    
+
     ExtractEntities --> SearchKnowledgeBase
     SearchKnowledgeBase --> SearchCodebase
     SearchCodebase --> SearchPriorConversations
-    
+
     SearchPriorConversations --> GenerateResponse: Information Found
     SearchPriorConversations --> FallbackResponse: No Information
-    
+
     GenerateResponse --> FormatWithExamples
     FormatWithExamples --> AddReferences
     AddReferences --> DeliverResponse
-    
+
     FallbackResponse --> GenerateGenericGuidance
     GenerateGenericGuidance --> SuggestAlternatives
     SuggestAlternatives --> DeliverResponse
-    
+
     DeliverResponse --> RecordInteraction
     RecordInteraction --> UpdateFAQ: Common Question
     RecordInteraction --> [*]: Unique Question
-    
+
     UpdateFAQ --> [*]
 ```
 
 1. **Trigger**: Question asked in any integrated platform
 2. **Intent Recognition**:
-   - Identifies question type and topic
-   - Extracts key entities and concepts
+    - Identifies question type and topic
+    - Extracts key entities and concepts
 3. **Knowledge Retrieval**:
-   - Searches vector database for semantically similar content
-   - Retrieves relevant documentation and past answers
-   - Examines code repository for relevant examples
+    - Searches vector database for semantically similar content
+    - Retrieves relevant documentation and past answers
+    - Examines code repository for relevant examples
 4. **Response Generation**:
-   - Creates comprehensive yet concise answer
-   - Includes code examples if appropriate
-   - Adds links to official documentation
+    - Creates comprehensive yet concise answer
+    - Includes code examples if appropriate
+    - Adds links to official documentation
 5. **Knowledge Capture**:
-   - Records question and answer in knowledge base
-   - Updates FAQ if question is common
-   - Identifies documentation gaps for future improvement
+    - Records question and answer in knowledge base
+    - Updates FAQ if question is common
+    - Identifies documentation gaps for future improvement
 
 ### Community Analytics Workflow
 
 1. **Data Collection**:
-   - Continuous monitoring of activity across all platforms
-   - Tracking of individual contributor actions
-   - Recording of response times and resolution rates
+    - Continuous monitoring of activity across all platforms
+    - Tracking of individual contributor actions
+    - Recording of response times and resolution rates
 2. **Processing**:
-   - Aggregation of metrics by timeframe and category
-   - Calculation of derived metrics (e.g., contributor retention)
-   - Trend analysis and anomaly detection
+    - Aggregation of metrics by timeframe and category
+    - Calculation of derived metrics (e.g., contributor retention)
+    - Trend analysis and anomaly detection
 3. **Insight Generation**:
-   - Identification of active vs. declining areas
-   - Recognition of valuable contributors
-   - Detection of potential community issues
+    - Identification of active vs. declining areas
+    - Recognition of valuable contributors
+    - Detection of potential community issues
 4. **Reporting**:
-   - Automated weekly summaries to maintainers
-   - Interactive dashboard updates
-   - Quarterly comprehensive project health reports
+    - Automated weekly summaries to maintainers
+    - Interactive dashboard updates
+    - Quarterly comprehensive project health reports
 5. **Action Recommendation**:
-   - Suggestions for community engagement improvements
-   - Identification of contributors for recognition
-   - Alerts for areas needing maintainer attention
+    - Suggestions for community engagement improvements
+    - Identification of contributors for recognition
+    - Alerts for areas needing maintainer attention
 
 ## Data Flow and Storage
 
@@ -664,7 +714,7 @@ flowchart TB
         GH["GitHub API"]
         DS["Discord API"]
         SL["Slack API"]
-        
+
     end
 
     subgraph "Data Collection Layer"
@@ -688,40 +738,41 @@ flowchart TB
     GH --> WH
     DS --> WH
     SL --> API
-    
-    
+
+
     WH --> NORM
     API --> NORM
     UI --> NORM
-    
+
     NORM --> EXTR
     EXTR --> EMB
 
-    
+
     EMB --> PIN
     EXTR --> SUP
     NORM --> MDB
-  
 
-    
+
+
 ```
 
 1. **External Data Sources**
-   - Platform APIs (GitHub, Discord, Slack)
-   - Webhook events
-   - Direct user interactions
+
+    - Platform APIs (GitHub, Discord, Slack)
+    - Webhook events
+    - Direct user interactions
 
 2. **Data Transformation**
-   - Normalization of platform-specific data formats
-   - Entity extraction and relationship mapping
-   - Embedding generation for textual content
+
+    - Normalization of platform-specific data formats
+    - Entity extraction and relationship mapping
+    - Embedding generation for textual content
 
 3. **Storage Destinations**
-   - Vector embeddings → Pinecone
-   - Structured relationships → Supabase
-   - Historical conversations → MongoDB
-   - Temporary state → Redis
-
+    - Vector embeddings → Pinecone
+    - Structured relationships → Supabase
+    - Historical conversations → MongoDB
+    - Temporary state → Redis
 
 ## Deployment Strategy
 
@@ -747,13 +798,13 @@ flowchart TB
             PROD_DB_A["Database Primary"]
             PROD_CACHE_A["Cache Primary"]
         end
-        
+
         subgraph "Region B"
             PROD_K8S_B["Kubernetes Cluster"]
             PROD_DB_B["Database Replica"]
             PROD_CACHE_B["Cache Replica"]
         end
-        
+
         LB["Load Balancer"]
         CDN["Content Delivery Network"]
     end
@@ -768,56 +819,60 @@ flowchart TB
     GIT --> CI
     CI --> REG
     REG --> CD
-    
+
     CD --> DEV_K8S
     CD --> STAGE_K8S
     CD --> PROD_K8S_A
     CD --> PROD_K8S_B
-    
+
     LB --> PROD_K8S_A
     LB --> PROD_K8S_B
-    
+
     PROD_DB_A <--> PROD_DB_B
     PROD_CACHE_A <--> PROD_CACHE_B
-    
+
     CDN --> LB
 ```
 
-- **Multi-environment Setup**:
-  - Development environment for active feature development
-  - Staging environment for integration testing
-  - Production environment for live deployment
+-   **Multi-environment Setup**:
 
-- **Containerized Deployment**:
-  - Microservices packaged as Docker containers
-  - Kubernetes for orchestration and scaling
-  - Helm charts for deployment configuration
+    -   Development environment for active feature development
+    -   Staging environment for integration testing
+    -   Production environment for live deployment
 
-- **High Availability Design**:
-  - Multiple replicas of critical services
-  - Cross-zone deployment on cloud provider
-  - Automatic failover mechanisms
+-   **Containerized Deployment**:
+
+    -   Microservices packaged as Docker containers
+    -   Kubernetes for orchestration and scaling
+    -   Helm charts for deployment configuration
+
+-   **High Availability Design**:
+    -   Multiple replicas of critical services
+    -   Cross-zone deployment on cloud provider
+    -   Automatic failover mechanisms
 
 ### CI/CD Pipeline
 
 1. **Code Integration**:
-   - Pull request validation
-   - Automated code quality checks
-   - Unit test execution
+
+    - Pull request validation
+    - Automated code quality checks
+    - Unit test execution
 
 2. **Build Process**:
-   - Docker image building
-   - Image vulnerability scanning
-   - Artifact versioning
+
+    - Docker image building
+    - Image vulnerability scanning
+    - Artifact versioning
 
 3. **Deployment Stages**:
-   - Automated deployment to development
-   - Manual approval for staging promotion
-   - Canary deployment to production
-   - Progressive rollout strategy
+
+    - Automated deployment to development
+    - Manual approval for staging promotion
+    - Canary deployment to production
+    - Progressive rollout strategy
 
 4. **Monitoring and Rollback**:
-   - Health check validation post-deployment
-   - Automatic rollback on critical metrics deviation
-   - Deployment audit logging
-
+    - Health check validation post-deployment
+    - Automatic rollback on critical metrics deviation
+    - Deployment audit logging
