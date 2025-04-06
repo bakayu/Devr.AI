@@ -14,6 +14,7 @@
         ![ss2](./docs/assets/images/github-feat-ss2.png)
 -   [x] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
     -   Screenshots:
+
         ![ss1](./docs/assets/images/discord-feat-ss1.png)
         ![ss2](./docs/assets/images/discord-feat-ss2.png)
         ![ss3](./docs/assets/images/discord-feat-ss3.png)
