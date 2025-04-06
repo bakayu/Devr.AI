@@ -1,74 +1,104 @@
-from backend.bots.discord_bot import DevrAIDiscordBot
-from .base import BaseEvent
 import logging
 import os
-from typing import Dict, Any
-import sys
+import json
+from datetime import datetime
 from pathlib import Path
+from .base import BaseEvent
+from .enums import EventType
 
+# !!TODO: We are using config.json and pending_notification.json files to store config data and the queue system.
+# This is for demo purposes only, in actual implementation there will be a more solid queue system and config data to be stored in Supabase.
 
 logger = logging.getLogger(__name__)
 
 class DiscordEventHandler:
-    """Discord event handler for sending notifications to Discord channels"""
-
-    def __init__(self, webhook_url=None):
-        self.webhook_url = webhook_url
-        self.discord_bot = None
+    def __init__(self):
+        self.config = None
         logger.info("Discord event handler initialized")
+        self._load_config()
 
-    def _init_bot(self):
-        """Initialize Discord bot if needed"""
-        if not self.discord_bot:
-            try:
-                self.discord_bot = DevrAIDiscordBot()
-                logger.info("Discord bot initialized for notifications")
-            except Exception as e:
-                logger.error(f"Failed to initialize Discord bot: {str(e)}")
+    def _load_config(self):
+        """Load the Discord bot configuration directly from file"""
+        try:
+            config_file = os.path.join(
+                Path(__file__).parent.parent.parent.parent,
+                "bots", "discord_bot", "config.json"
+            )
+            if os.path.exists(config_file):
+                with open(config_file, 'r') as f:
+                    self.config = json.load(f)
+                logger.info(f"Discord event handler loaded config: {self.config}")
+            else:
+                logger.warning(f"Discord bot config file not found at {config_file}")
+                self.config = {"notification_channel_id": None, "webhook_url": None, "maintainers": []}
+        except Exception as e:
+            logger.error(f"Error loading Discord bot config: {str(e)}")
+            self.config = {"notification_channel_id": None, "webhook_url": None, "maintainers": []}
 
-    async def notify(self, event: BaseEvent, result: Dict[str, Any] = None):
-        """Process event and send notifications to Discord"""
-        event_type = event.event_type.value
+    async def add_notification_to_queue(self, event_type: str, data: dict) -> bool:
+        """Add a notification to the pending notifications file"""
+        try:
+            notifications_file = os.path.join(
+                Path(__file__).parent.parent.parent.parent,
+                "bots", "discord_bot", "pending_notifications.json"
+            )
 
-        if event.event_type.value.startswith("issue"):
-            logger.info(f"[DISCORD NOTIFICATION] Issue event: {event_type}")
-            logger.info(f"  Repository: {event.repository}")
-            logger.info(f"  Issue #{event.issue_number}: {event.title}")
-            logger.info(f"  URL: {event.url}")
+            notifications = {"pending": []}
+            if os.path.exists(notifications_file):
+                try:
+                    with open(notifications_file, 'r') as f:
+                        notifications = json.load(f)
+                except json.JSONDecodeError:
+                    logger.warning("Invalid JSON in notifications file, creating new file")
 
-            message = self._format_issue_message(event)
-            await self._send_discord_message(message)
+            notifications["pending"].append({
+                "type": event_type,
+                "data": data,
+                "timestamp": str(datetime.now())
+            })
 
-        elif event.event_type.value.startswith("pr"):
-            logger.info(f"[DISCORD NOTIFICATION] PR event: {event_type}")
-            logger.info(f"  Repository: {event.repository}")
-            logger.info(f"  PR #{event.pr_number}: {event.title}")
-            logger.info(f"  URL: {event.url}")
+            with open(notifications_file, 'w') as f:
+                json.dump(notifications, f, indent=4)
 
-            message = self._format_pr_message(event)
-            await self._send_discord_message(message)
+            logger.info(f"Added notification to queue: {event_type}")
+            return True
+        except Exception as e:
+            logger.error(f"Error adding notification to queue: {str(e)}")
+            return False
 
-    def _format_issue_message(self, event: BaseEvent) -> str:
-        """Format an issue event message for Discord"""
-        return (
-            f"**New Issue Created**\n"
-            f"Repository: {event.repository}\n"
-            f"Issue #{event.issue_number}: {event.title}\n"
-            f"Created by: {event.actor_name}\n"
-            f"URL: {event.url}"
-        )
+    async def notify(self, event: BaseEvent):
+        """Process an event notification by adding it to the queue for the bot to process"""
+        self._load_config()
 
-    def _format_pr_message(self, event: BaseEvent) -> str:
-        """Format a PR event message for Discord"""
-        return (
-            f"**New Pull Request Created**\n"
-            f"Repository: {event.repository}\n"
-            f"PR #{event.pr_number}: {event.title}\n"
-            f"Created by: {event.actor_name}\n"
-            f"URL: {event.url}"
-        )
+        try:
+            if event.event_type == EventType.ISSUE_CREATED:
+                await self.add_notification_to_queue("issue_created", {
+                    "title": event.title,
+                    "body": event.body,
+                    "user": {"login": event.actor_name},
+                    "html_url": event.url,
+                    "repository": event.repository,
+                    "issue_number": event.issue_number
+                })
+                logger.info(f"Queued issue notification for issue #{event.issue_number}")
+                return True
 
-    async def _send_discord_message(self, message: str):
-        """Send a message to Discord"""
-        # FIXME: For now just log the message. In the future, this should send to Discord.
-        logger.info(f"Would send to Discord: {message}")
+            elif event.event_type == EventType.PR_CREATED:
+                await self.add_notification_to_queue("pr_created", {
+                    "title": event.title,
+                    "body": event.body,
+                    "user": {"login": event.actor_name},
+                    "html_url": event.url,
+                    "repository": event.repository,
+                    "pr_number": event.pr_number
+                })
+                logger.info(f"Queued PR notification for PR #{event.pr_number}")
+                return True
+
+            else:
+                logger.warning(f"Unknown event type for Discord notification: {event.event_type}")
+                return False
+
+        except Exception as e:
+            logger.error(f"Error queueing notification: {str(e)}")
+            return False

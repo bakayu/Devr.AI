@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 
 *.pem
+config.json
+pending_notifications.json
 
 # C extensions
 *.so
