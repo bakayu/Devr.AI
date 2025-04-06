@@ -12,7 +12,11 @@
     -   Screenshots:
         ![ss1](./docs/assets/images/github-feat-ss1.png)
         ![ss2](./docs/assets/images/github-feat-ss2.png)
--   [ ] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
+-   [x] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
+    -   Screenshots:
+        ![ss1](./docs/assets/images/discord-feat-ss1.png)
+        ![ss2](./docs/assets/images/discord-feat-ss2.png)
+        ![ss3](./docs/assets/images/discord-feat-ss3.png)
 -   [ ] Feature: Supabase integration for RAG based FAQs and answering of common questions on discord.
 -   [x] Documentation: Write documentation demo, including installation guide using MkDocs and host it on github pages.
     -   Documentation for the demo has been written in [docs](./docs/) folder, which can be served as a MkDocs documentation on GitHub pages via the [docs](./.github/workflows/docs.yml) GitHub action.

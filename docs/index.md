@@ -49,7 +49,6 @@ flowchart TB
     subgraph "External Platforms"
         GH["GitHub"]
         DS["Discord"]
-        SL["Slack"]
     end
 
     subgraph "Core Processing Engine"
@@ -69,7 +68,6 @@ flowchart TB
 
     GH --> EB
     DS --> EB
-    SL --> EB
 
     EB <--> HR
     HR <--> LLM
