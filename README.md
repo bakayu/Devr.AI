@@ -7,8 +7,11 @@
 
 ### TO-DO:
 
--   [ ] Implement a Basic Event Bus with asyncio and define event handlers for demo features.
--   [ ] Implement GitHub Event capture and event handlers for routing.
+-   [x] Implement a Basic Event Bus with asyncio and define event handlers for demo features.
+-   [x] Implement GitHub Event capture and event handlers for routing.
+    -   Screenshots:
+        ![ss1](./docs/assets/images/github-feat-ss1.png)
+        ![ss2](./docs/assets/images/github-feat-ss2.png)
 -   [ ] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
 -   [ ] Feature: Supabase integration for RAG based FAQs and answering of common questions on discord.
 -   [x] Documentation: Write documentation demo, including installation guide using MkDocs and host it on github pages.
