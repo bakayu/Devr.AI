@@ -1,10 +1,10 @@
 import logging
 from .event_bus import EventBus
 from .enums import EventType, PlatformType
+from .discord_events import DiscordEventHandler
 from ..handler.handler_registry import HandlerRegistry
 from ..handler.issue_handler import IssueHandler
 from ..handler.pr_handler import PRHandler
-from ..notification.discord_notifier import DiscordNotifier
 
 logger = logging.getLogger(__name__)
 
@@ -29,9 +29,9 @@ def initialize_event_system() -> EventBus:
 
     event_bus = EventBus(handler_registry)
 
-    # Set up Discord notifications
-    discord_notifier = DiscordNotifier()
-    event_bus.register_global_handler(discord_notifier.notify)
+    # Set up Discord event handler for notifications
+    discord_handler = DiscordEventHandler()
+    event_bus.register_global_handler(discord_handler.notify)
 
     logger.info("Event system initialized successfully")
     return event_bus

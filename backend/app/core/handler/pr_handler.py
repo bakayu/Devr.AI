@@ -1,9 +1,12 @@
+from backend.bots.github_bot import GitHubBot
+from .base import BaseHandler
+from ..events.enums import EventType
+from ..events.base import BaseEvent
 import logging
 from typing import Dict, Any, List
-from ..events.base import BaseEvent
-from ..events.enums import EventType
-from .base import BaseHandler
-from ...services.github_service import GitHubService
+import sys
+from pathlib import Path
+
 
 logger = logging.getLogger(__name__)
 
@@ -12,7 +15,7 @@ class PRHandler(BaseHandler):
 
     def __init__(self):
         super().__init__()
-        self.github_service = GitHubService()
+        self.github_bot = GitHubBot()
 
     async def handle(self, event: BaseEvent) -> Dict[str, Any]:
         logger.info(f"Handling GitHub PR event: {event.event_type}")
@@ -38,7 +41,7 @@ class PRHandler(BaseHandler):
                 f"The team has been notified and will review it soon."
             )
 
-            comment_added = await self.github_service.add_pr_comment(
+            comment_added = await self.github_bot.add_pr_comment(
                 repository, pr_number, comment
             )
 
