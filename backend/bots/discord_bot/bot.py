@@ -169,6 +169,8 @@ class DevrAIDiscordBot:
                 logger.error(f"Channel config error: {str(e)}")
                 await ctx.respond("Something went wrong while setting up the channel.")
 
+        self.bot.add_application_command(devr_group)
+
         @devr_group.command(name="register_maintainer", description="Register a user as a maintainer")
         async def register_maintainer(ctx, user: discord.Member = None):
             try:
@@ -228,17 +230,29 @@ class DevrAIDiscordBot:
             logger.warning("No notification channel configured")
             return False
 
+        if data is None:
+            logger.error("No data provided for notification")
+            return False
+
         channel_id = self.config["notification_channel_id"]
         maintainer_mentions = " ".join([f"<@{user_id}>" for user_id in self.config.get("maintainers", [])])
 
         try:
             if event_type == "issue_created":
+                repository = data.get('repository', 'unknown')
+                title = data.get('title', 'No title')
+                body_text = data.get('body', 'No description provided')
+                body_text = body_text if body_text else 'No description provided'
+                user_dict = data.get('user', {}) or {}  # Handle None case
+                user_login = user_dict.get('login', 'Unknown')
+                html_url = data.get('html_url', 'No link provided')
+
                 message = (
-                    f"**New Issue Created in {data.get('repository', 'unknown')}**\n\n"
-                    f"**Title:** {data.get('title')}\n"
-                    f"**Description:** {data.get('body', 'No description provided')[:500]}...\n"
-                    f"**Created by:** {data.get('user', {}).get('login', 'Unknown')}\n"
-                    f"**Link:** {data.get('html_url', 'No link provided')}\n\n"
+                    f"**New Issue Created in {repository}**\n\n"
+                    f"**Title:** {title}\n"
+                    f"**Description:** {body_text[:500]}...\n"
+                    f"**Created by:** {user_login}\n"
+                    f"**Link:** {html_url}\n\n"
                 )
 
                 if maintainer_mentions:
@@ -247,12 +261,20 @@ class DevrAIDiscordBot:
                 return await self.send_message(channel_id, message)
 
             elif event_type == "pr_created":
+                repository = data.get('repository', 'unknown')
+                title = data.get('title', 'No title')
+                body_text = data.get('body', 'No description provided')
+                body_text = body_text if body_text else 'No description provided'
+                user_dict = data.get('user', {}) or {}  # Handle None case
+                user_login = user_dict.get('login', 'Unknown')
+                html_url = data.get('html_url', 'No link provided')
+
                 message = (
-                    f"**New Pull Request in {data.get('repository', 'unknown')}**\n\n"
-                    f"**Title:** {data.get('title')}\n"
-                    f"**Description:** {data.get('body', 'No description provided')[:500]}...\n"
-                    f"**Created by:** {data.get('user', {}).get('login', 'Unknown')}\n"
-                    f"**Link:** {data.get('html_url', 'No link provided')}\n\n"
+                    f"**New Pull Request in {repository}**\n\n"
+                    f"**Title:** {title}\n"
+                    f"**Description:** {body_text[:500]}...\n"
+                    f"**Created by:** {user_login}\n"
+                    f"**Link:** {html_url}\n\n"
                 )
 
                 if maintainer_mentions:
@@ -272,19 +294,16 @@ class DevrAIDiscordBot:
         """Process events from the event bus and send appropriate notifications"""
         try:
             channel_id = self.config.get("notification_channel_id")
-            logger.info(f"Attempting to send notification to channel ID: {channel_id}")  # ADDED: Check channel ID here
+            logger.info(f"Attempting to send notification to channel ID: {channel_id}")
             if not channel_id:
                 logger.warning("No notification channel configured")
                 return False
 
-            # Get maintainer mentions for notifications
             maintainer_mentions = " ".join([f"<@{user_id}>" for user_id in self.config.get("maintainers", [])])
 
-            # Process based on event type
             event_type = event.event_type.value
 
             if event_type == EventType.ISSUE_CREATED.value:
-                # Format issue created message
                 message = (
                     f"**New Issue Created**\n\n"
                     f"**Title:** {event.title}\n"
@@ -296,13 +315,11 @@ class DevrAIDiscordBot:
                 if maintainer_mentions:
                     message += f"cc: {maintainer_mentions}"
 
-                # Send the message
                 await self.send_message(channel_id, message)
                 logger.info(f"Sent notification for issue #{event.issue_number}")
                 return True
 
             elif event_type == EventType.PR_CREATED.value:
-                # Format PR created message
                 message = (
                     f"**New Pull Request**\n\n"
                     f"**Title:** {event.title}\n"
@@ -314,7 +331,6 @@ class DevrAIDiscordBot:
                 if maintainer_mentions:
                     message += f"cc: {maintainer_mentions}"
 
-                # Send the message
                 await self.send_message(channel_id, message)
                 logger.info(f"Sent notification for PR #{event.pr_number}")
                 return True
