@@ -43,7 +43,6 @@ class RAGService:
     async def create_embeddings_from_docs(self, docs_path: str) -> bool:
         """Create embeddings from documents in the specified directory"""
         try:
-            # Load documents
             loader = DirectoryLoader(
                 docs_path,
                 glob="**/*.md",
@@ -57,7 +56,6 @@ class RAGService:
 
             logger.info(f"Loaded {len(documents)} documents")
 
-            # Split documents
             text_splitter = RecursiveCharacterTextSplitter(
                 chunk_size=1000,
                 chunk_overlap=100
@@ -66,10 +64,8 @@ class RAGService:
 
             logger.info(f"Split into {len(chunks)} chunks")
 
-            # Create embeddings and store them
             embedding_items = []
             for chunk in chunks:
-                # Generate embeddings using FastEmbedEmbeddings
                 embedding_vector = self.embeddings.embed_query(chunk.page_content)
 
                 item = EmbeddingItem(
@@ -98,10 +94,8 @@ class RAGService:
     async def query(self, query_text: str, limit: int = 5) -> Dict[str, Any]:
         """Query the vector DB with RAG to get an answer"""
         try:
-            # Create embedding for query using FastEmbedEmbeddings
             query_embedding = self.embeddings.embed_query(query_text)
 
-            # Search vector DB
             results = await self.vector_db_service.search(
                 query_embedding=query_embedding,
                 collection=self.collection_name,
