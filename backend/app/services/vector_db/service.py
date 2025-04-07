@@ -96,7 +96,7 @@ class VectorDBService:
             return False
 
     async def search(
-        self, query_embedding: List[float], collection: str, limit: int = 5, threshold: float = 0.5
+        self, query_embedding: List[float], collection: str, limit: int = 5, threshold: float = 0.7
     ) -> List[Dict[str, Any]]:
         """Search for similar embeddings using Supabase RPC."""
         try:
@@ -198,6 +198,20 @@ class VectorDBService:
             logger.error(f"Connection check failed: {str(e)}")
             return False
 
+    async def clear_collection(self, collection: str) -> bool:
+        """Clear all embeddings for a given collection via RPC."""
+        try:
+            response = self.client.rpc(
+                "clear_collection_embeddings",
+                {
+                    "p_collection": collection
+                }
+            ).execute()
+            return response.data is not None
+        except Exception as e:
+            logger.error(f"Error clearing collection: {str(e)}")
+            return False
+
     content: str
     metadata: Dict[str, Any]
     embedding: Optional[List[float]] = None
@@ -205,7 +219,3 @@ class VectorDBService:
 
 class EmbeddingService:
     """Service for generating embeddings for text"""
-
-
-class VectorDBService:
-    """Service for interacting with Supabase Vector DB"""

@@ -35,5 +35,9 @@ class EventType(str, Enum):
     FAQ_REQUESTED = "faq.requested"
     KNOWLEDGE_UPDATED = "knowledge.updated"
 
+    # RAG query events
+    RAG_QUERY = "rag.query"
+    RAG_RESPONSE = "rag.response"
+
     # Analytics events
     ANALYTICS_COLLECTED = "analytics.collected"

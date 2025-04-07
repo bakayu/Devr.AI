@@ -1,0 +1,156 @@
+source,title,path,id,content
+docs/INSTALL_GUIDE.md,Devr.AI Installation Guide,INSTALL_GUIDE.md,0,"# Devr.AI Installation Guide
+
+Follow this guide to set up Devr.AI's development environment on your local machine.
+
+## Prerequisites
+
+-   [Python](https://www.python.org/) 3.9+ (version 3.10 is recommended)
+-   [Node.js](https://nodejs.org/en) (latest LTS version)
+-   [Git](https://git-scm.com/) (any recent version)
+
+## Setup Guide
+
+1. Clone the repository. (If you are using a fork of the repository, replace the GitHub repo url with your own)
+
+```sh
+git clone https://github.com/AOSSIE-Org/Devr.AI.git
+cd Devr.AI
+```
+
+2. This project uses [poetry](https://python-poetry.org/) for package management. Install poetry with the following steps: (Skip this step if you have poetry installed)
+
+    - On Linux / MacOS / WSL
+
+    ```sh
+    curl -sSL https://install.python-poetry.org | python3 -
+    ```
+
+    - On Windows (powershell)
+
+    ```powershell
+    (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+    ```
+
+    - Verify the installation with the command: (should say v2.0.0 or above)
+
+    ```sh
+    poetry --version
+    ```
+
+3. Install Project Dependencies. Inside the project directory (at root level), run the following commands:
+
+```sh
+poetry env use python3.10
+poetry install --with dev
+```
+
+This should install all the necessary dependencies for the project.
+
+4.  To activate the virtual environment created by poetry, run the following commands:
+
+    -   On Linux / Mac / WSL
+
+    ```sh
+    eval $(poetry env activate)
+    ```
+
+    -   On Windows (powershell)
+
+    ```powershell
+    Invoke-Expression (poetry env activate)
+    ```
+
+    > [!NOTE]
+    > For further information about poetry and managing environments refer to the [poetry docs](https://python-poetry.org/docs/managing-environments/).
+"
+docs/index.md,Devr.AI - AI-Powered Developer Relations Assistant,index.md,1,"# Devr.AI - AI-Powered Developer Relations Assistant
+
+Welcome to the documentation for Devr.AI, an advanced AI-powered Developer Relations (DevRel) assistant designed to revolutionize open-source community management.
+
+## Project Overview
+
+Devr.AI integrates with platforms like Discord, Slack, GitHub, and Discourse to function as a virtual DevRel advocate that helps maintainers engage with contributors, streamline onboarding processes, and deliver real-time project updates.
+
+The system leverages Large Language Models (LLMs), knowledge retrieval mechanisms, and workflow automation to enhance community engagement, simplify contributor onboarding, and ensure that open-source projects remain active and well-supported.
+
+## Key Features
+
+### Event-Based Architecture
+
+-   **Centralized Event Bus**: A robust event processing system that handles events from various platforms
+-   **Extensible Handler Registry**: Easy-to-extend handler system for processing different event types
+-   **Platform Adapters**: Specialized adapters for GitHub, Discord, Slack, and other platforms
+
+### GitHub Integration
+
+-   **Webhook Event Capture**: Capturing and processing GitHub events (issues, PRs, comments)
+-   **Automated Triage**: Intelligent issue and PR triage based on content and context
+-   **Contributor Recognition**: Automatic detection and welcome for new contributors
+
+### Discord Interaction
+
+-   **GitHub Notifications**: Real-time notifications in Discord for important GitHub events
+-   **Command-Based Interaction**: Rich command system for project management from Discord
+-   **User Onboarding**: Guided onboarding experience for new community members
+
+### Knowledge Management
+
+-   **RAG-Based FAQ System**: Retrieval-Augmented Generation for answering common questions
+-   **Project-Specific Knowledge**: Contextual understanding of your specific project
+-   **Self-Updating Documentation**: Documentation suggestions based on common questions
+
+## Getting Started
+
+To get started with Devr.AI, check out our [Installation Guide](./INSTALL_GUIDE.md) which will walk you through setting up the project locally.
+
+## System Architecture
+
+Devr.AI follows a modular, event-driven architecture that makes it easy to extend and customize.
+
+Architecture for this demo:
+
+```mermaid
+flowchart TB
+    subgraph ""External Platforms""
+        GH[""GitHub""]
+        DS[""Discord""]
+    end
+
+    subgraph ""Core Processing Engine""
+        EB[""Event Bus""]
+        HR[""Handler Registry""]
+    end
+
+    subgraph ""AI Services""
+        LLM[""LLM Service""]
+        KR[""Knowledge Retrieval""]
+    end
+
+    subgraph ""Storage""
+        VDB[""Vector Database""]
+        DB[""Relational Database""]
+    end
+
+    GH --> EB
+    DS --> EB
+
+    EB <--> HR
+    HR <--> LLM
+    HR <--> KR
+
+    LLM <--> VDB
+    KR <--> VDB
+    HR <--> DB
+```
+
+## Demo Features
+
+This demo includes the following core functionalities:
+
+-   Basic Event Bus: A centralized event processing system
+-   GitHub Event Handling: Capture and route GitHub webhook events
+-   Discord Notifications: Send GitHub event notifications to Discord
+-   RAG-Based Q&A: Answer common questions using Retrieval-Augmented Generation
+-   Documentation System: This MkDocs documentation hosted on GitHub Pages
+"

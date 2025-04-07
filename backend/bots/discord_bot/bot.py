@@ -14,7 +14,11 @@ from dotenv import load_dotenv
 project_root = Path(__file__).parent.parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from backend.app.core.events.enums import EventType  # noqa
+from backend.app.core.events.enums import EventType, PlatformType  # noqa
+from backend.app.core.events.discord_event import DiscordEvent  # noqa
+from backend.app.core.events.event_bus import EventBus  # noqa
+from backend.app.core.events.init_events import initialize_event_system  # noqa
+from backend.app.services.rag.service import RAGService  # noqa
 
 load_dotenv()
 
@@ -36,8 +40,12 @@ class DevrAIDiscordBot:
         intents.members = True
 
         self.bot = discord.Bot(intents=intents)
+        self.event_bus = initialize_event_system()
         self.setup_event_handlers()
         self.register_commands()
+
+        # Initialize RAG service for direct access
+        self.rag_service = RAGService()
 
         self.bot.loop.create_task(self.check_pending_notifications())
 
@@ -151,6 +159,7 @@ class DevrAIDiscordBot:
             `/devr status` - Check if the bot is alive
             `/devr configure_channel` - Set up this channel for GitHub notifications
             `/devr register_maintainer` - Add yourself or someone else as a maintainer
+            `/ask` - Ask a question about Devr.AI
             """
             await ctx.respond(help_text)
 
@@ -188,6 +197,29 @@ class DevrAIDiscordBot:
             except Exception as e:
                 logger.error(f"Maintainer registration error: {str(e)}")
                 await ctx.respond("Something went wrong while registering the maintainer.")
+
+        @self.bot.slash_command(name="ask", description="Ask a question about Devr.AI")
+        async def ask_command(ctx, query: str):
+            try:
+                await ctx.defer()
+                result = await self.rag_service.query(query)
+                if result["success"]:
+                    answer = result["answer"]
+                    sources = "\n".join(result["sources"])
+                    embed = discord.Embed(
+                        title="Devr.AI Answer",
+                        description=answer,
+                        color=discord.Color.blue()
+                    )
+                    if sources:
+                        embed.add_field(name="Sources", value=sources, inline=False)
+                    await ctx.respond(embed=embed)
+                else:
+                    await ctx.respond(result["answer"])
+
+            except Exception as e:
+                logger.error(f"Error handling ask command: {str(e)}")
+                await ctx.respond(f"An error occurred: {str(e)}")
 
     async def send_message(self, channel_id, message):
         try:
