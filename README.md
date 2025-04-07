@@ -45,6 +45,10 @@ flowchart TB
 
 ## Features Implemented
 
+### Demo Video
+
+[![demo](./docs/assets/images/github-feat-ss1.png)](https://youtu.be/EJIDTVchAcs)
+
 ### Installation
 
 For installing the project locally refer to the [Installation Guide](./docs/INSTALL_GUIDE.md).
