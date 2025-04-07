@@ -1,33 +1,234 @@
 # Devr.AI - AI-Powered Developer Relations Assistant
 
-# This is a demo branch
+## Demo Overview
 
 > [!NOTE]
-> This branch will be used to develop and showcase a demo featuring some of the features from my proposal - [link](https://docs.google.com/document/d/1HINE3WiX_SRkeAu_ByR3wB3t3E2yLq3rUEAHkmNZX9M/edit?usp=sharing).
+> This is a demo branch showcasing key features from the Devr.AI project proposal. It implements core functionality to demonstrate the potential of an AI-powered Developer Relations assistant.
 
-### TO-DO:
+## Architecture
 
--   [x] Implement a Basic Event Bus with asyncio and define event handlers for demo features.
--   [x] Implement GitHub Event capture and event handlers for routing.
-    -   Screenshots:
-        ![ss1](./docs/assets/images/github-feat-ss1.png)
-        ![ss2](./docs/assets/images/github-feat-ss2.png)
--   [x] Feature: Notification on Discord via the discord bot. (GitHub event -> event bus -> notification on discord.)
-    -   Screenshots:
+This architecture will be followed for this demo (full architecture can be found here: [link](https://toothsome-energy-7f9.notion.site/Devr-AI-Architecture-Proposed-Workflow-1aef50d2a320807ebff0e96b7d20b9aa?pvs=74)):
 
-        ![ss1](./docs/assets/images/discord-feat-ss1.png)
-        ![ss2](./docs/assets/images/discord-feat-ss2.png)
-        ![ss3](./docs/assets/images/discord-feat-ss3.png)
--   [ ] Feature: Supabase integration for RAG based FAQs and answering of common questions on discord.
--   [x] Documentation: Write documentation demo, including installation guide using MkDocs and host it on github pages.
-    -   Documentation for the demo has been written in [docs](./docs/) folder, which can be served as a MkDocs documentation on GitHub pages via the [docs](./.github/workflows/docs.yml) GitHub action.
-    -   Screenshots:
-        ![screenshot 1](./docs/assets/images/screenshot1.png)
-        ![screenshot 2](./docs/assets/images/screenshot2.png)
+```mermaid
+flowchart TB
+    subgraph "External Platforms"
+        GH["GitHub"]
+        DS["Discord"]
+    end
 
-...
+    subgraph "Core Processing Engine"
+        EB["Event Bus"]
+        HR["Handler Registry"]
+    end
+
+    subgraph "AI Services"
+        LLM["LLM Service"]
+        KR["Knowledge Retrieval"]
+    end
+
+    subgraph "Storage"
+        VDB["Vector Database"]
+        DB["Relational Database"]
+    end
+
+    GH --> EB
+    DS --> EB
+
+    EB <--> HR
+    HR <--> LLM
+    HR <--> KR
+
+    LLM <--> VDB
+    KR <--> VDB
+    HR <--> DB
+```
+
+## Features Implemented
+
+### Installation
+
+For installing the project locally refer to the [Installation Guide](./docs/INSTALL_GUIDE.md).
+
+### 1. Event Bus
+
+**What it does:**
+
+-   Creates a centralized event processing system that handles events from GitHub and Discord.
+-   Implements an extensible handler registry for routing events to appropriate handlers.
+-   Provides a standardized way to process events asynchronously using asyncio.
+
+**Implementation details:**
+
+-   Core event bus system with handler registration and dispatching.
+-   Support for platform-specific (GitHub, Discord).
+-   Global event handlers for cross-platform notifications.
+
+### 2. GitHub Event Integration
+
+**What it does:**
+
+-   Captures GitHub events via the webhook (issues and PRs).
+-   Processes these events through the event bus.
+-   Responds to events with the GitHub bot integration.
+
+**Implementation details:**
+
+-   FastAPI endpoint for receiving GitHub webhook payloads.
+-   Event handlers for issue and PR creation.
+-   Automatic welcome comments for new issues and PRs.
+
+**Testing:**
+To test the GitHub integration:
+
+1. Set up a GitHub App with webhook capabilities.
+2. Use ngrok to expose your local server:
+
+```bash
+ngrok http 8000
+```
+
+3. Configure your GitHub App webhook URL to point to your `ngrok URL` + `/github/webhook`
+4. Set the webhook secret in your `backend/.env` file
+5. Run the backend server:
+
+```bash
+python backend/main.py
+```
+
+6. Create an issue or PR in your connected repository to trigger the webhook
+
+![ss1](./docs/assets/images/github-feat-ss1.png)
+![ss2](./docs/assets/images/github-feat-ss2.png)
+
+### 3. Discord Bot Integration
+
+**What it does:**
+
+-   Welcomes new-comers with a welcome message.
+-   Provides real-time notifications in Discord for GitHub events.
+-   Implements a slash command querying the vector DB via the discord bot.
+-   Manages maintainer roles and notification channels.
+
+**Implementation details:**
+
+-   Discord bot with slash commands for configuration.
+-   Event-based notification system.
+-   RAG query system for querying the vector database through the bot.
+
+> [!NOTE]
+> `config.json` and `pending_notification.json` files are being used to store config data and the queue system. This is for demo purposes only, in actual implementation there will be a more solid queue system and config data to be stored in Supabase.
+
+**Testing:**
+To test the Discord integration:
+
+1. Create a Discord bot in the Discord Developer Portal.
+2. Add the bot token to your `backend/.env` file.
+3. Invite the bot to your server with appropriate permissions.
+4. Run the Discord bot:
+
+```bash
+python backend/bots/discord_bot/run_bot.py
+```
+
+5. Use the `/help` command to see available commands.
+6. Configure a notification channel with `/devr configure_channel`.
+7. Register maintainers with `/devr register_maintainer`.
+8. Trigger a GitHub event to see notifications in Discord.
+
+![ss1](./docs/assets/images/discord-feat-ss1.png)
+![ss2](./docs/assets/images/discord-feat-ss2.png)
+![ss3](./docs/assets/images/discord-feat-ss3.png)
+
+### 4. RAG-Based Q&A System
+
+**What it does:**
+
+-   Implements Retrieval-Augmented Generation for answering project-specific questions.
+-   Indexes project documentation in a vector database.
+
+**Implementation details:**
+
+-   Supabase vector database integration for storing embeddings.
+-   FastEmbedEmbeddings for generating document embeddings.
+-   Groq LLM integration for generating high-quality responses.
+-   Discord `/ask` command for querying the knowledge base.
+
+> [!NOTE]
+> Right now, `*.md` files stored in a local `docs` directory are being used to create embeddings. In actual implementation we will have a more solid system to generate embeddings.
+
+**Testing:**
+To test the RAG Q&A system:
+
+1. Set up a Supabase account and create a project
+2. Set up the vector database using the provided SQL
+3. Add your Supabase URL and key to your `backend/.env` file
+4. Get a Groq API key and add it to your `backend/.env` file
+5. Build the embeddings from your documentation:
+
+```bash
+python backend/app/services/rag/build_embeddings.py
+```
+
+6. Run the Discord bot and use the `/ask` command to query your project documentation
+
+![ss1](./docs/assets/images/rag-feat-ss1.png)
+![ss2](./docs/assets/images/rag-feat-ss2.png)
+![ss3](./docs/assets/images/rag-feat-ss3.png)
+
+### 5. Documentation System
+
+**What it does:**
+
+-   Provides comprehensive documentation for the project.
+-   Hosted on github pages, automated deployment via GitHub actions.
+
+**Implementation details:**
+
+-   MkDocs-based documentation.
+-   [GitHub workflow](.github/workflows/docs.yml) for automating deployment to github pages.
+
+**Testing:**
+To view the documentation locally:
+
+```bash
+mkdocs serve
+```
+
+![ss1](./docs/assets/images/screenshot1.png)
+![ss2](./docs/assets/images/screenshot2.png)
+
+## Environment Variables
+
+The following environment variables need to be set in your `backend/.env` file:
+
+```
+# Supabase (for vector database)
+SUPABASE_URL=
+SUPABASE_SERVICE_ROLE_KEY=
+
+# GitHub
+GITHUB_WEBHOOK_SECRET=
+GITHUB_APP_ID=
+GITHUB_APP_PRIVATE_KEY_PATH=
+GITHUB_APP_INSTALLATION_ID=
+GITHUB_TOKEN=
+
+# Discord Bot
+DISCORD_BOT_TOKEN=
+
+# RAG
+GROQ_API_KEY=
+LLM_MODEL=llama3-8b-8192
+
+# FastAPI
+PORT=8000
+```
+
+......
 
 ---
+
+# Devr.AI - AI-Powered Developer Relations Assistant
 
 ## Table of Contents
 
